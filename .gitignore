@@ -1,7 +1,7 @@
 .idea/
 .vscode/
-terraform/key.json
-terraform/*.tfstate
-terraform/*.tfstate.backup
-terraform/.terraform.lock.hcl
-terraform/.terraform/
+**/key.json
+**/*.tfstate
+**/*.tfstate.backup
+**/.terraform.lock.hcl
+**/.terraform/
