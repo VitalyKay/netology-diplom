@@ -1,0 +1,8 @@
+---
+# vars file for nginx-proxy-install
+nginx_proxy_configs:
+  - alertmanager
+  - gitlab
+  - grafana
+  - prometheus
+  - wordpress

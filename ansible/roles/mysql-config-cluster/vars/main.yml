@@ -1,0 +1,6 @@
+---
+# vars file for mysql-config-cluster
+replication_user: replication
+replication_password: "Replica-12345"
+replica_file: "mysql-bin.000333"
+replica_position: "1000"

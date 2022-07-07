@@ -1,0 +1,7 @@
+---
+# handlers file for mysql-config-cluster
+- name: Restart MySQL
+  become: yes
+  ansible.builtin.service:
+    name: mysqld
+    state: restarted

@@ -1,0 +1,31 @@
+server{
+    listen 443 ssl;
+    server_name grafana.{{ domain_name }};
+    
+    access_log   /var/log/gr-vknd-access.log  main;
+
+    ssl_certificate /etc/letsencrypt/live/{{ domain_name }}/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/{{ domain_name }}/privkey.pem;
+    ssl_trusted_certificate /etc/letsencrypt/live/{{ domain_name }}/chain.pem;
+
+    ssl_stapling on;
+    ssl_stapling_verify on;
+
+    # исключим возврат на http-версию сайта
+    add_header Strict-Transport-Security "max-age=31536000";
+
+    # явно "сломаем" все картинки с http://
+    add_header Content-Security-Policy "img-src https: data:; upgrade-insecure-requests";
+
+
+    location / {
+        proxy_pass         http://{{ hostvars['monitoring-node'].ansible_host }}:3000;
+        proxy_http_version 1.1;
+        proxy_set_header   Upgrade $http_upgrade;
+        proxy_set_header   Connection keep-alive;
+        proxy_set_header   Host $host;
+        proxy_cache_bypass $http_upgrade;
+        proxy_set_header   X-Forwarded_For $proxy_add_x_forwarded_for;
+        proxy_set_header   X-Forwarded_Proto $scheme;
+    }
+}

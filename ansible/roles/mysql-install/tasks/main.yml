@@ -1,0 +1,41 @@
+---
+# tasks file for mysql-install
+- name: Install MySQL 5.7 repo
+  become: yes
+  ansible.builtin.yum:
+    name: http://repo.mysql.com/mysql57-community-release-el7.rpm
+    state: present 
+- name: Import a key from repo.mysql.com
+  become: yes
+  ansible.builtin.rpm_key:
+    state: present
+    key: https://repo.mysql.com/RPM-GPG-KEY-mysql-2022
+- name: Install MySQL 5.7
+  become: yes
+  ansible.builtin.yum:
+    name:
+      - mysql-community-server
+      - mysql-community-client
+      - MySQL-python
+    state: installed
+- name: Ensure mysql service is running
+  become: yes
+  ansible.builtin.systemd:
+    name: mysqld
+    state: started
+    enabled: yes
+- name: Find MySQL root password
+  become: yes
+  ansible.builtin.shell: "echo `grep 'temporary.*root@localhost' /var/log/mysqld.log | sed 's/.*root@localhost: //'`"
+  register: mysql_root_pass
+- ansible.builtin.debug:
+    var: mysql_root_pass.stdout
+- name: Set master password variable
+  ansible.builtin.set_fact:
+    tmp_mysql_master_password: "{{ mysql_root_pass.stdout }}"
+  when: inventory_hostname == 'mysql-master'
+- name: Set slave password variable
+  ansible.builtin.set_fact:
+    tmp_mysql_slave_password: "{{ mysql_root_pass.stdout }}"
+  when: inventory_hostname == 'mysql-slave'
+

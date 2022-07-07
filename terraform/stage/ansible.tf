@@ -1,5 +1,5 @@
 resource "time_sleep" "wait_for_inventory" {
-  create_duration = "30s"
+  create_duration = "90s"
 
   depends_on = [
     local_file.inventory
