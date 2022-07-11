@@ -1,0 +1,24 @@
+---
+# tasks file for nginx
+- name: Install nginx Centos7
+  become: yes
+  block:
+  - name: CentOS - Install EPEL-release
+    ansible.builtin.yum:
+      name: epel-release
+      state: present
+  - name: CentOS - Install Nginx
+    ansible.builtin.yum:
+      name: nginx
+      state: present
+    notify: Start Nginx service
+  - name: CentOS - Turn off selinux for nginx 
+    ansible.builtin.command: semanage permissive -a httpd_t
+  when: ansible_facts['distribution'] == "CentOS"
+- name: Ubuntu - Install Nginx
+  become: yes
+  ansible.builtin.apt:
+    name: nginx
+    state: present
+    update_cache: yes
+  when: ansible_facts['distribution'] == "Ubuntu"

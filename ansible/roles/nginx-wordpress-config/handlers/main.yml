@@ -1,0 +1,7 @@
+---
+# handlers file for nginx-wordpress-config
+- name: Restart nginx service
+  become: yes
+  ansible.builtin.service:
+    name: nginx
+    state: restarted

@@ -1,53 +1,24 @@
 ---
-# - name: Install Nginx
-#   hosts: nginx-node
-#   remote_user: ubuntu
-#   roles:
-#     - nginx-proxy-install    
+- name: Install Nginx
+  hosts: nginx-node
+  remote_user: ubuntu
+  roles:
+    - nginx
+    - nginx-proxy-install    
 
-- name: Install MySQL
-  hosts: mysql
+# - name: Install MySQL
+#   hosts: mysql
+#   remote_user: centos
+#   roles:
+#     - mysql-install
+#     - mysql-config-cluster
+#     - create-wordpress-db
+
+- name: Install Wordpress
+  hosts: wordpress-node
   remote_user: centos
   roles:
-    - mysql-install
-    - mysql-config-cluster
-
-# - name: Install Wordpress
-#   hosts: wordpress-node
-#   handlers:
-#     - name: Start Nginx
-#       become: true
-#       ansible.builtin.command: nginx
-#     - name: Reload Nginx
-#       become: true
-#       ansible.builtin.command: nginx -s reload
-#   tasks:
-#     - name: Install EPEL-release
-#       become: true
-#       ansible.builtin.yum:
-#         name: epel-release
-#         state: present
-#     - name: Install Nginx
-#       become: true
-#       ansible.builtin.yum:
-#         name: nginx
-#         state: present
-    #   notify: Start Nginx
-    # - name: Flush handlers
-    #   meta: flush_handlers
-    # - name: Configure wordpress nginx
-    #   become: true
-    #   ansible.builtin.template:
-    #     src: nginxwp.conf.j2
-    #     dest: /etc/nginx/nginx.conf
-    #     mode: 0644
-    # - name: copy index
-    #   ansible.builtin.copy:
-    #     src: files/index.html
-    #     dest: /home/centos/index.html
-    #     mode: "0644"
-    #     owner: "{{ ansible_user_id }}"
-    #     group: "{{ ansible_user_gid }}"
-    #   notify: Reload Nginx
-        
-        
+    - nginx
+    - php-install
+    - wordpress
+    - nginx-wordpress-config

@@ -1,0 +1,9 @@
+---
+# tasks file for nginx-wordpress-config
+- name: Copy wordpress config template
+  become: yes
+  ansible.builtin.template:
+    src: templates/wordpress.conf.j2
+    dest: "/etc/nginx/conf.d/{{ wordpress_domain }}.conf"
+    mode: 0644
+  notify: Restart nginx service

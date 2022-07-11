@@ -1,0 +1,7 @@
+---
+# defaults file for wordpress
+wordpress_domain: "www.vitalykay-netology-diplom.tk"
+nginx_user: "nginx"
+wordpress_user: "wordpress"
+wordpress_password: "wordpress"
+wordpress_db: "wordpress"

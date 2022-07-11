@@ -1,0 +1,5 @@
+---
+# defaults file for create-wordpress-db
+wordpress_user: "wordpress"
+wordpress_password: "wordpress"
+wordpress_db: "wordpress"

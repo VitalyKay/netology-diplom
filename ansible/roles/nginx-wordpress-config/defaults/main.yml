@@ -1,0 +1,3 @@
+---
+# defaults file for nginx-wordpress-config
+wordpress_domain: "www.vitalykay-netology-diplom.tk"

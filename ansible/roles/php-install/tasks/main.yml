@@ -1,0 +1,62 @@
+---
+# tasks file for php-install
+# - name: Yum update
+#   become: yes
+#   ansible.builtin.yum:
+#     name: "*"
+#     state: latest
+- name: Install Epel-release and yum-utils
+  become: yes
+  ansible.builtin.yum:
+    name:
+      - epel-release
+      - yum-utils
+    state: present
+- name: Download remi repo rpm
+  become: yes
+  ansible.builtin.get_url:
+    url: "{{ remi_release_url }}"
+    dest: /root/
+- name: Install remi repo rpm
+  become: yes
+  ansible.builtin.yum:
+    name: /root/remi-release-7.rpm
+    state: present
+- name: Install PHP with extentions
+  become: yes
+  ansible.builtin.yum:
+    enablerepo:
+      - remi
+      - "remi-php{{ php_version }}"
+    name:
+      - php
+      - php-cli
+      - php-fpm
+      - php-mysql
+      - php-json
+      - php-opcache
+      - php-mbstring
+      - php-xml
+      - php-gd
+      - php-curl
+
+- name: Config PHP FPM to socket and user nginx
+  become: yes
+  ansible.builtin.template:
+    src: templates/www.conf.j2
+    dest: /etc/php-fpm.d/www.conf
+    mode: 0644
+- name: Recursively change ownership of a directory /var/lib/php
+  become: yes
+  ansible.builtin.file:
+    path: /var/lib/php
+    state: directory
+    recurse: yes
+    owner: root
+    group: nginx
+- name: Enable and start FPM service
+  become: yes
+  ansible.builtin.service:
+    name: php-fpm
+    state: started
+    enabled: yes

@@ -1,0 +1,34 @@
+---
+nginx:
+  hosts:
+    nginx-node:
+      ansible_ssh_common_args: '-o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null'
+      ansible_user: ubuntu
+      ansible_host: 51.250.69.94
+mysql:
+  hosts:
+    mysql-master:
+      ansible_user: centos
+      ansible_host: 192.168.200.20
+    mysql-slave:
+      ansible_user: centos
+      ansible_host: 192.168.200.34
+wordpress:
+  hosts:
+    wordpress-node:
+      ansible_ssh_common_args: '-o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o ProxyCommand="ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -W %h:%p -q ubuntu@51.250.69.94"'
+      ansible_user: centos
+      ansible_host: 192.168.200.15
+gitlab:
+  hosts:
+    gitlab-server:
+      ansible_user: centos
+      ansible_host: 192.168.200.12
+    gitlab-runner:
+      ansible_user: centos
+      ansible_host: 192.168.200.38
+monitoring:
+  hosts:
+    monitoring-node:
+      ansible_user: centos
+      ansible_host: 192.168.200.17

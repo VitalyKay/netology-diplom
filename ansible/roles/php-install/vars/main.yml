@@ -1,0 +1,5 @@
+---
+# vars file for php-install
+remi_release_url: "http://rpms.remirepo.net/enterprise/remi-release-7.rpm"
+php_fpm_user: "nginx"
+php_fpm_group: "nginx"

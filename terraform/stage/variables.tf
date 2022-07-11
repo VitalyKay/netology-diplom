@@ -14,4 +14,10 @@ variable "yandex_external_ip" {
   default = "51.250.69.94"
 }
 
+variable "yandex_ubuntu_user" {
+  default = "ubuntu"
+}
 
+variable "yandex_centos_user" {
+  default = "centos"
+}

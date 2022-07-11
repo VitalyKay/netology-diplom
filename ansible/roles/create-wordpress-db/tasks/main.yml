@@ -1,0 +1,17 @@
+---
+# tasks file for create-wordpress-db
+- name: Create wordpress db and user
+  block:
+  - name: Create wordpress db
+    community.mysql.mysql_db:
+      name: "{{ wordpress_db }}"
+      state: present
+  - name: Create wordpress user with priveleges
+    community.mysql.mysql_user:
+      name: "{{ wordpress_user }}"
+      password: "{{ wordpress_password }}"
+      host: "%"
+      priv: "{{ wordpress_db }}.*:ALL"
+      state: present      
+  when: inventory_hostname == 'mysql-master' 
+  become: yes    

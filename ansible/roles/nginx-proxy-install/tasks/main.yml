@@ -1,24 +1,19 @@
 ---
 # tasks file for nginx-proxy-install
-- name: Apt install nginx
-  become: yes
-  ansible.builtin.apt:
-    name: nginx
-    state: present
-    update_cache: yes
 - name: Config nginx
   become: yes
   ansible.builtin.template:
     src: templates/nginx.conf.j2
     dest: /etc/nginx/nginx.conf
     mode: 0644
+
 - name: Create ACME Challenge directory
   become: yes
   ansible.builtin.file:
     path: /var/www/html/.well-known/acme-challenge
     state: directory
     mode: 0755
-- name: install certbot
+- name: Install Certbot
   become: yes
   ansible.builtin.apt:
     name: certbot
@@ -33,7 +28,8 @@
 - name: get test cerificates
   become: yes
   ansible.builtin.command: "certbot certonly --test-cert --agree-tos --no-eff-email -q --email {{ email }} -d {{ domain_name }} -d www.{{ domain_name }} -d gitlab.{{ domain_name }} -d grafana.{{ domain_name }} -d prometheus.{{ domain_name }} -d alertmanager.{{ domain_name }}"
-- name: Config proxy to wordpress
+
+- name: Copy proxy config templates
   become: yes
   ansible.builtin.template:
     src: "templates/{{ item }}.conf.j2"

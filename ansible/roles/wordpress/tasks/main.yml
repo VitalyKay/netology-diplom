@@ -1,0 +1,38 @@
+---
+# tasks file for wordpress
+- name: Create wordpress directory
+  become: yes
+  ansible.builtin.file:
+    path: "/var/www/html/{{ wordpress_domain }}"
+    state: directory
+    recurse: yes
+    mode: 0755
+- name: Get wordpress archive
+  ansible.builtin.get_url:
+    url: "{{ wordpress_url }}"
+    dest: /tmp/latest.tar.gz
+- name: Unarchive wordpress archive
+  ansible.builtin.unarchive:
+    src: /tmp/latest.tar.gz
+    remote_src: yes
+    dest: /tmp/
+- name: Copy wordpress to www
+  become: yes
+  ansible.builtin.copy:
+    src: /tmp/wordpress/
+    remote_src: yes
+    dest: "/var/www/html/{{ wordpress_domain }}"
+- name: Set owner for wordpress directories
+  become: yes
+  ansible.builtin.file:
+    path: "/var/www/html/{{ wordpress_domain }}"
+    state: directory
+    recurse: yes
+    owner: "{{ nginx_user }}"
+- name: Configure Wordpress
+  become: yes
+  ansible.builtin.template:
+    src: templates/wp-config.php.j2
+    dest: "/var/www/html/{{ wordpress_domain }}/wp-config.php"
+    mode: 0666
+    
