@@ -1,0 +1,12 @@
+---
+# tasks file for gitlab-runner-install
+- name: Install gitlab-runner package repo
+  become: yes
+  ansible.builtin.shell: curl -L "https://packages.gitlab.com/install/repositories/runner/gitlab-runner/script.rpm.sh" | sudo bash
+- name: Install the GitLab runner package
+  become: yes
+  ansible.builtin.yum:
+    name: gitlab-runner
+- name: Register Gitlab runner
+  become: yes
+  ansible.builtin.shell: gitlab-runner register --non-interactive --url "http://{{ hostvars['gitlab-server'].ansible_host }}/" --registration-token "{{ hostvars['gitlab-server'].gitlab_runner_registration_token_result.stdout }}" --executor "shell" --description "shell-runner" --tag-list "centos" --run-untagged="true" --locked="false" --access-level="not_protected"    

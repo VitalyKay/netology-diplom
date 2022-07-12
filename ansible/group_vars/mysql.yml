@@ -1,5 +1,2 @@
 ---
-tmp_mysql_master_password: "masterpassword"
-tmp_mysql_slave_password: "slavepassword"
-mysql_root_master_pass: "Masterpass-123"
-mysql_root_slave_pass: "Slavepass-123"
+mysql_root_pass: "Masterpass-123"

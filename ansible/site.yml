@@ -1,10 +1,10 @@
 ---
-- name: Install Nginx
-  hosts: nginx-node
-  remote_user: ubuntu
-  roles:
-    - nginx
-    - nginx-proxy-install    
+# - name: Install Nginx
+#   hosts: nginx-node
+#   remote_user: ubuntu
+#   roles:
+#     - nginx
+#     - nginx-proxy-install    
 
 # - name: Install MySQL
 #   hosts: mysql
@@ -12,13 +12,36 @@
 #   roles:
 #     - mysql-install
 #     - mysql-config-cluster
+#     - mysqld-exporter-install
 #     - create-wordpress-db
 
-- name: Install Wordpress
-  hosts: wordpress-node
-  remote_user: centos
+# - name: Install Wordpress
+#   hosts: wordpress-node
+#   remote_user: centos
+#   roles:
+#     - nginx
+#     - php-install
+#     - wordpress
+#     - nginx-wordpress-config
+
+# - name: Install Gitlab server
+#   hosts: gitlab-server
+#   remote_user: centos
+#   roles:
+#     - gitlab-ce-install
+
+# - name: Install Gitlab runner
+#   hosts: gitlab-runner
+#   remote_user: centos
+#   roles:
+#     - gitlab-runner-install
+
+- name: install monitoring
+  hosts: monitoring-node
   roles:
-    - nginx
-    - php-install
-    - wordpress
-    - nginx-wordpress-config
+    - mysql-install
+    - node-exporter-install
+    - mysqld-exporter-install
+    - prometheus-install
+
+    

@@ -1,0 +1,46 @@
+---
+# tasks file for node-exporter-install
+- name: Create Prometheus group
+  become: yes
+  ansible.builtin.group:
+    name: "{{ prometheus_group }}"
+    state: present
+- name: Create Prometheus user
+  become: yes
+  ansible.builtin.user:
+    name: "{{ prometheus_user }}"
+    group: "{{ prometheus_group }}"
+    state: present
+- name: Get node exporter
+  ansible.builtin.get_url:
+    url: "https://github.com/prometheus/node_exporter/releases/download/v{{ node_exporter_version }}/node_exporter-{{ node_exporter_version }}.linux-amd64.tar.gz"
+    dest: "~/node_exporter-{{ node_exporter_version }}.linux-amd64.tar.gz"
+- name: Unarchive node exporter
+  ansible.builtin.unarchive:
+    src: "~/node_exporter-{{ node_exporter_version }}.linux-amd64.tar.gz"
+    remote_src: yes
+    dest: "/tmp/"
+- name: Copy node_exporter to /usr/local/bin
+  become: yes
+  ansible.builtin.command: "cp -n /tmp/node_exporter-{{ node_exporter_version }}.linux-amd64/node_exporter /usr/local/bin"
+- name: Change node_exporter owner
+  become: yes
+  ansible.builtin.file:
+    path: /usr/local/bin/node_exporter
+    owner: "{{ prometheus_user }}"
+    group: "{{ prometheus_group }}"
+- name: Copy node_exporter service template
+  become: yes
+  ansible.builtin.template:
+    src: templates/node_exporter.service.j2
+    dest: /etc/systemd/system/node_exporter.service
+    mode: "0644"
+    owner: "{{ ansible_user_id }}"
+    group: "{{ ansible_user_gid }}"
+- name: Start node_exporter service
+  become: true
+  ansible.builtin.systemd:
+    name: node_exporter
+    state: started 
+    enabled: yes
+    daemon_reload: true

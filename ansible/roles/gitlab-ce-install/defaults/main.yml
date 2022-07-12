@@ -1,0 +1,4 @@
+---
+# defaults file for gitlab-ce-install
+gitlab_domain: "gitlab.vitalykay-netology-diplom.tk"
+gitlab_root_password: "Pa$$w0rd"

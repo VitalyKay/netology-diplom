@@ -10,33 +10,33 @@ resource "local_file" "inventory" {
     mysql:
       hosts:
         mysql-master:
-          ansible_ssh_common_args: '-o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o ProxyCommand=”ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -W %h:%p -q ${var.yandex_ubuntu_user}@${var.yandex_external_ip}"'
+          ansible_ssh_common_args: '-o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o ProxyCommand="ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -W %h:%p -q ${var.yandex_ubuntu_user}@${var.yandex_external_ip}"'
           ansible_user: ${var.yandex_centos_user}
           ansible_host: ${yandex_compute_instance.mysql-master-node.network_interface.0.ip_address}
         mysql-slave:
-          ansible_ssh_common_args: '-o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o ProxyCommand=”ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -W %h:%p -q ${var.yandex_ubuntu_user}@${var.yandex_external_ip}"'
+          ansible_ssh_common_args: '-o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o ProxyCommand="ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -W %h:%p -q ${var.yandex_ubuntu_user}@${var.yandex_external_ip}"'
           ansible_user: ${var.yandex_centos_user}
           ansible_host: ${yandex_compute_instance.mysql-slave-node.network_interface.0.ip_address}
     wordpress:
       hosts:
         wordpress-node:
-          ansible_ssh_common_args: '-o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o ProxyCommand=”ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -W %h:%p -q ${var.yandex_ubuntu_user}@${var.yandex_external_ip}"'
+          ansible_ssh_common_args: '-o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o ProxyCommand="ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -W %h:%p -q ${var.yandex_ubuntu_user}@${var.yandex_external_ip}"'
           ansible_user: ${var.yandex_centos_user}
           ansible_host: ${yandex_compute_instance.wordpress-node.network_interface.0.ip_address}
     gitlab:
       hosts:
         gitlab-server:
-          ansible_ssh_common_args: '-o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o ProxyCommand=”ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -W %h:%p -q ${var.yandex_ubuntu_user}@${var.yandex_external_ip}"'
+          ansible_ssh_common_args: '-o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o ProxyCommand="ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -W %h:%p -q ${var.yandex_ubuntu_user}@${var.yandex_external_ip}"'
           ansible_user: ${var.yandex_centos_user}
           ansible_host: ${yandex_compute_instance.gitlab-server-node.network_interface.0.ip_address}
         gitlab-runner:
-          ansible_ssh_common_args: '-o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o ProxyCommand=”ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -W %h:%p -q ${var.yandex_ubuntu_user}@${var.yandex_external_ip}"'
+          ansible_ssh_common_args: '-o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o ProxyCommand="ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -W %h:%p -q ${var.yandex_ubuntu_user}@${var.yandex_external_ip}"'
           ansible_user: ${var.yandex_centos_user}
           ansible_host: ${yandex_compute_instance.gitlab-runner-node.network_interface.0.ip_address}
     monitoring:
       hosts:
         monitoring-node:
-          ansible_ssh_common_args: '-o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o ProxyCommand=”ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -W %h:%p -q ${var.yandex_ubuntu_user}@${var.yandex_external_ip}"'
+          ansible_ssh_common_args: '-o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o ProxyCommand="ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -W %h:%p -q ${var.yandex_ubuntu_user}@${var.yandex_external_ip}"'
           ansible_user: ${var.yandex_centos_user}
           ansible_host: ${yandex_compute_instance.monitoring-node.network_interface.0.ip_address}
     DOC

@@ -1,0 +1,16 @@
+---
+# tasks file for gitlab-ce-install
+- name: Install gitlab-ce package repo
+  become: yes
+  ansible.builtin.shell: curl 'https://packages.gitlab.com/install/repositories/gitlab/gitlab-ce/script.rpm.sh' | sudo bash
+- name: Install the GitLab package
+  become: yes
+  ansible.builtin.yum:
+    name: gitlab-ce
+  environment:
+    EXTERNAL_URL: "http://{{ gitlab_domain }}"
+    GITLAB_ROOT_PASSWORD: "{{ gitlab_root_password }}"
+- name: Extract Runner Registration Token directly from Gitlab Rails console
+  become: true
+  ansible.builtin.shell: 'gitlab-rails runner -e production "puts Gitlab::CurrentSettings.current_application_settings.runners_registration_token"'
+  register: gitlab_runner_registration_token_result

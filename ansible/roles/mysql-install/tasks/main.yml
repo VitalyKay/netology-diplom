@@ -27,15 +27,30 @@
 - name: Find MySQL root password
   become: yes
   ansible.builtin.shell: "echo `grep 'temporary.*root@localhost' /var/log/mysqld.log | sed 's/.*root@localhost: //'`"
-  register: mysql_root_pass
-- ansible.builtin.debug:
-    var: mysql_root_pass.stdout
-- name: Set master password variable
-  ansible.builtin.set_fact:
-    tmp_mysql_master_password: "{{ mysql_root_pass.stdout }}"
-  when: inventory_hostname == 'mysql-master'
-- name: Set slave password variable
-  ansible.builtin.set_fact:
-    tmp_mysql_slave_password: "{{ mysql_root_pass.stdout }}"
-  when: inventory_hostname == 'mysql-slave'
+  register: mysql_tmp_root_pass
 
+#Detect and properly set root password 
+- name: Detect and properly set root password - master
+  block:
+  - name: Detect .my.cnf file
+    ansible.builtin.stat:
+      path: /root/.my.cnf
+    register: result
+  - name: File .my.cnf exists
+    community.mysql.mysql_user:
+      name: root
+      password: "{{ mysql_root_pass }}"
+    when: result.stat.exists == true
+  - name: Set new password from temporary password
+    ansible.builtin.shell: 'mysql -e "SET PASSWORD = PASSWORD(''{{ mysql_root_pass }}'');" --connect-expired-password -uroot -p"{{ mysql_tmp_root_pass.stdout }}"'
+    when: result.stat.exists == false
+  become: true
+
+- name: Create .my.cnf
+  become: yes
+  ansible.builtin.template:
+   src: "templates/.my.cnf.j2"
+   dest: "/root/.my.cnf"
+   owner: root
+   group: root
+   mode: 0600

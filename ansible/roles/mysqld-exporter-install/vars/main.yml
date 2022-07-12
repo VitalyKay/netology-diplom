@@ -1,0 +1,7 @@
+---
+# vars file for mysql-exporter-install
+mysqld_exporter_version: "0.14.0"
+prometheus_user: "prometheus"
+prometheus_group: "prometheus"
+mysql_exporter_user: "exporter"
+mysql_exporter_pass: "exporter-pass"

@@ -1,0 +1,69 @@
+---
+# tasks file for mysqld-exporter-install
+- name: Create Prometheus group
+  become: yes
+  ansible.builtin.group:
+    name: "{{ prometheus_group }}"
+    state: present
+- name: Create Prometheus user
+  become: yes
+  ansible.builtin.user:
+    name: "{{ prometheus_user }}"
+    group: "{{ prometheus_group }}"
+    state: present
+- name: Get mysqld_exporter distr
+  ansible.builtin.get_url: 
+    url: "https://github.com/prometheus/mysqld_exporter/releases/download/v{{ mysqld_exporter_version }}/mysqld_exporter-{{ mysqld_exporter_version }}.linux-amd64.tar.gz"
+    dest: "~/mysqld_exporter-{{ mysqld_exporter_version }}.linux-amd64.tar.gz"
+- name: Unarchive mysqld_exporter
+  ansible.builtin.unarchive:
+    src: "~/mysqld_exporter-{{ mysqld_exporter_version }}.linux-amd64.tar.gz"
+    remote_src: yes
+    dest: "/tmp/"
+- name: Copy mysqld_exporter to /usr/local/bin
+  become: yes
+  ansible.builtin.shell: |
+    cp /tmp/mysqld_exporter-{{ mysqld_exporter_version }}.linux-amd64/mysqld_exporter /usr/local/bin
+    rm -rf /tmp/mysqld_exporter-{{ mysqld_exporter_version }}.linux-amd64
+- name: Change mysqld_exporter owner
+  become: yes
+  ansible.builtin.file:
+    path: /usr/local/bin/mysqld_exporter
+    owner: "{{ prometheus_user }}"
+    group: "{{ prometheus_group }}"
+
+- name: Create exporter user
+  become: yes
+  community.mysql.mysql_user:
+    name: "{{ mysql_exporter_user }}"
+    password: "{{ mysql_exporter_pass }}"
+    host: localhost
+    priv: "*.*:PROCESS,REPLICATION CLIENT,SELECT"
+    state: present
+    resource_limits:
+      MAX_USER_CONNECTIONS: 3
+
+- name: Create .mysqld_exporter.cnf
+  become: yes
+  ansible.builtin.template:
+   src: "templates/.mysqld_exporter.cnf.j2"
+   dest: "/usr/local/etc/.mysqld_exporter.cnf"
+   owner: "{{ prometheus_user }}"
+   group: "{{ prometheus_group }}"
+   mode: 0600
+
+- name: Copy mysqld_exporter service template
+  become: yes
+  ansible.builtin.template:
+    src: templates/mysqld_exporter.service.j2
+    dest: /etc/systemd/system/mysqld_exporter.service
+    mode: "0644"
+    owner: "{{ ansible_user_id }}"
+    group: "{{ ansible_user_gid }}"
+- name: Start mysqld_exporter service
+  become: true
+  ansible.builtin.systemd:
+    name: mysqld_exporter
+    state: started 
+    enabled: yes
+    daemon_reload: true

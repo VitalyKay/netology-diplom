@@ -1,0 +1,44 @@
+global:
+  scrape_interval:     10s
+scrape_configs:
+  - job_name: 'prometheus'
+    static_configs:
+    - targets: ['localhost:9090']
+  - job_name: 'nginx-node'
+    scrape_interval: 10s
+    static_configs:
+    - targets: ['{{ hostvars['nginx-node'].ansible_host }}:9100']
+  - job_name: 'mysql-master-node'
+    scrape_interval: 10s
+    static_configs:
+    - targets: ['{{ hostvars['mysql-master'].ansible_host }}:9100'] 
+  - job_name: 'mysql-slave-node'
+    scrape_interval: 10s
+    static_configs:
+    - targets: ['{{ hostvars['mysql-slave'].ansible_host }}:9100']  
+  - job_name: 'wordpress-node'
+    scrape_interval: 10s
+    static_configs:
+    - targets: ['{{ hostvars['wordpress-node'].ansible_host }}:9100'] 
+  - job_name: 'gitlab-server'
+    scrape_interval: 10s
+    static_configs:
+    - targets: ['{{ hostvars['gitlab-server'].ansible_host }}:9100']
+  - job_name: 'gitlab-runner'
+    scrape_interval: 10s
+    static_configs:
+    - targets: ['{{ hostvars['gitlab-runner'].ansible_host }}:9100']
+  - job_name: 'monitoring-node'
+    scrape_interval: 10s
+    static_configs:
+    - targets: ['{{ hostvars['monitoring-node'].ansible_host }}:9100']
+  - job_name: 'mysqld-master'
+    static_configs:
+      - targets: ['{{ hostvars['mysql-master'].ansible_host }}:9104']
+        labels:
+          alias: mysqld-master
+  - job_name: 'mysqld-slave'
+    static_configs:
+      - targets: ['{{ hostvars['mysql-slave'].ansible_host }}:9104']
+        labels:
+          alias: mysqld-slave

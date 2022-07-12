@@ -3,7 +3,7 @@
 - name: Copy Master template cnf
   become: true
   ansible.builtin.template:
-    src: templates/{{ inventory_hostname }}.cnf.j2    
+    src: "templates/{{ inventory_hostname }}.cnf.j2"
     dest: /etc/my.cnf
     mode: 0644
     owner: mysql
@@ -11,51 +11,6 @@
   notify: Restart MySQL
 - name: Flush handlers
   meta: flush_handlers
-
-#Detect and properly set root password 
-- name: Detect and properly set root password - master
-  block:
-  - name: Detect .my.cnf file
-    ansible.builtin.stat:
-      path: /root/.my.cnf
-    register: result
-  - name: File .my.cnf exists
-    community.mysql.mysql_user:
-      name: root
-      password: "{{ mysql_root_master_pass }}"
-    when: result.stat.exists == true
-  - name: Set new password from temporary password
-    ansible.builtin.shell: 'mysql -e "SET PASSWORD = PASSWORD(''{{ mysql_root_master_pass }}'');" --connect-expired-password -uroot -p"{{ tmp_mysql_master_password }}"'
-    when: result.stat.exists == false
-  when: inventory_hostname == 'mysql-master'
-  become: true
-#Detect and properly set root password
-- name: Detect and properly set root password - slave
-  block:
-  - name: Detect .my.cnf file
-    ansible.builtin.stat:
-      path: /root/.my.cnf
-    register: result
-  - name: File .my.cnf exists
-    community.mysql.mysql_user:
-      name: root
-      password: "{{ mysql_root_slave_pass }}"
-    when: result.stat.exists == true
-  - name: Set new password from temporary password
-    ansible.builtin.shell: 'mysql -e "SET PASSWORD = PASSWORD(''{{ mysql_root_slave_pass }}'');" --connect-expired-password -uroot -p"{{ tmp_mysql_slave_password }}"'
-    when: result.stat.exists == false
-  when: inventory_hostname == 'mysql-slave'
-  become: true
-
-- name: Create .my.cnf
-  become: yes
-  ansible.builtin.template:
-   src: "templates/{{ inventory_hostname }}.my.cnf.j2"
-   dest: "/root/.my.cnf"
-   owner: root
-   group: root
-   mode: 0600
-
 
 - name: Create replica user on master
   become: yes
@@ -88,7 +43,7 @@
       primary_host: "{{ hostvars['mysql-master'].ansible_host }}"
       primary_log_file: "{{ hostvars['mysql-master'].primary_info.File }}"
       primary_log_pos: "{{ hostvars['mysql-master'].primary_info.Position }}"
-  - name: Stop mysql replica thread
+  - name: Start mysql replica thread
     community.mysql.mysql_replication:
       mode: startreplica
   when: inventory_hostname == 'mysql-slave'
