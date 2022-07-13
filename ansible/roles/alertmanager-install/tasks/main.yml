@@ -1,0 +1,66 @@
+---
+# tasks file for alertmanager-install 
+
+- name: Create Prometheus group
+  become: yes
+  ansible.builtin.group:
+    name: "{{ prometheus_group }}"
+    state: present
+- name: Create Prometheus user
+  become: yes
+  ansible.builtin.user:
+    name: "{{ prometheus_user }}"
+    group: "{{ prometheus_group }}"
+    state: present
+- name: Get alertmanager distr
+  ansible.builtin.get_url:
+    url: "https://github.com/prometheus/alertmanager/releases/download/v{{ alertmanager_version }}/alertmanager-{{ alertmanager_version }}.linux-amd64.tar.gz"
+    dest: "~/alertmanager-{{ alertmanager_version }}.linux-amd64.tar.gz"
+- name: Unarchive alertmanager
+  ansible.builtin.unarchive:
+    src: "~/alertmanager-{{ alertmanager_version }}.linux-amd64.tar.gz"
+    remote_src: yes
+    dest: "/tmp/"
+
+- name: Copy alertmanager to /usr/local/bin
+  become: yes
+  ansible.builtin.command: "cp -n /tmp/alertmanager-{{ alertmanager_version }}.linux-amd64/{{ item }} /usr/local/bin"
+  loop:
+    - alertmanager
+    - amtool
+
+- name: Change alertmanager owner
+  become: yes
+  ansible.builtin.file:
+    path: "/usr/local/bin/{{ item }}"
+    owner: "{{ prometheus_user }}"
+    group: "{{ prometheus_group }}"
+  loop:
+    - alertmanager
+    - amtool
+
+- name: Copy alertmanager configuration template
+  become: yes
+  ansible.builtin.template:
+    src: templates/alertmanager.yml.j2
+    dest: /etc/prometheus/alertmanager.yml
+    mode: "0644"
+    owner: "{{ prometheus_user }}"
+    group: "{{ prometheus_group }}"
+
+- name: Copy alertmanager service template
+  become: yes
+  ansible.builtin.template:
+    src: templates/alertmanager.service.j2
+    dest: /etc/systemd/system/alertmanager.service
+    mode: "0644"
+    owner: root
+    group: root
+
+- name: Start alertmanager service
+  become: true
+  ansible.builtin.systemd:
+    name: alertmanager
+    state: started 
+    enabled: yes
+    daemon_reload: true

@@ -4,9 +4,9 @@ resource "local_file" "inventory" {
     nginx:
       hosts:
         nginx-node:
-          ansible_ssh_common_args: '-o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null'
+          ansible_ssh_common_args: '-o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o ProxyCommand="ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -W %h:%p -q ${var.yandex_ubuntu_user}@${var.yandex_external_ip}"'
           ansible_user: ${var.yandex_ubuntu_user}
-          ansible_host: ${yandex_compute_instance.nginx-node.network_interface.0.nat_ip_address}
+          ansible_host: ${yandex_compute_instance.nginx-node.network_interface.0.ip_address}
     mysql:
       hosts:
         mysql-master:

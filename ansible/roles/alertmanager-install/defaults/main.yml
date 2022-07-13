@@ -1,0 +1,7 @@
+---
+# defaults file for alertmanager-install
+receiver_email: "vitalykay@yandex.ru"
+sender_email: "alertmanager@vitalykay-netology-diplom.tk"
+smtp_host: "smtp.yandex.ru:25"
+email_user_name: "vitalykay"
+email_password: "password"

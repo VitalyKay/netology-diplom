@@ -1,0 +1,5 @@
+---
+# vars file for alertmanager-install
+alertmanager_version: "0.24.0"
+prometheus_user: "prometheus"
+prometheus_group: "prometheus"

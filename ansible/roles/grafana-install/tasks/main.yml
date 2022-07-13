@@ -1,0 +1,40 @@
+---
+# tasks file for grafana-install
+- name: Copy Grafana repo file
+  become: yes
+  ansible.builtin.copy:
+    src: files/grafana.repo
+    dest: /etc/yum.repos.d/grafana.repo
+    mode: 0644
+- name: Install Grafana
+  become: yes
+  ansible.builtin.yum:
+    name: grafana
+- name: Set Prometheus datasource
+  become: yes
+  ansible.builtin.copy:
+    src: files/prometheus.yml
+    dest: /etc/grafana/provisioning/datasources/prometheus.yml
+    owner: grafana
+    group: grafana
+- name: Set Prometheus dashboard
+  become: yes
+  ansible.builtin.copy:
+    src: files/node-exporter-full.json
+    dest: /etc/grafana/provisioning/dashboards/node-exporter-full.json
+    owner: grafana
+    group: grafana
+- name: Set Prometheus dashboard
+  become: yes
+  ansible.builtin.copy:
+    src: files/dashboard.yml
+    dest: /etc/grafana/provisioning/dashboards/dashboard.yml
+    owner: grafana
+    group: grafana
+- name: Start Grafana server
+  become: yes
+  ansible.builtin.systemd:
+    name: grafana-server
+    state: started
+    enabled: yes
+    daemon_reload: yes

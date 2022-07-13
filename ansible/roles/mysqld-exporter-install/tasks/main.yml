@@ -32,7 +32,7 @@
     owner: "{{ prometheus_user }}"
     group: "{{ prometheus_group }}"
 
-- name: Create exporter user
+- name: Create exporter user 
   become: yes
   community.mysql.mysql_user:
     name: "{{ mysql_exporter_user }}"

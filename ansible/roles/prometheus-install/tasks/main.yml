@@ -62,14 +62,30 @@
     - /usr/local/bin/prometheus
     - /usr/local/bin/promtool
 
+- name: Copy Prometheus config template
+  become: yes
+  ansible.builtin.template:
+    src: templates/prometheus.yml.j2
+    dest: /etc/prometheus/prometheus.yml
+    owner: "{{ prometheus_user }}"
+    group: "{{ prometheus_group }}"
+    mode: 0644
+- name: Copy rules for alertmanager
+  become: yes
+  ansible.builtin.copy:
+    src: files/rules.yml
+    dest: /etc/prometheus/rules.yml
+    owner: "{{ prometheus_user }}"
+    group: "{{ prometheus_group }}"
+    mode: 0644    
 - name: Copy prometheus service template
   become: yes
   ansible.builtin.template:
     src: templates/prometheus.service.j2
     dest: /etc/systemd/system/prometheus.service
     mode: "0644"
-    owner: "{{ ansible_user_id }}"
-    group: "{{ ansible_user_gid }}"
+    owner: root
+    group: root
 - name: Start prometheus service
   become: true
   ansible.builtin.systemd:

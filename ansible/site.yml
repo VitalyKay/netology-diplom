@@ -1,18 +1,18 @@
 ---
-# - name: Install Nginx
-#   hosts: nginx-node
-#   remote_user: ubuntu
-#   roles:
-#     - nginx
-#     - nginx-proxy-install    
+- name: Install Nginx
+  hosts: nginx-node
+  remote_user: ubuntu
+  roles:
+    - nginx
+    - nginx-proxy-install    
 
 # - name: Install MySQL
 #   hosts: mysql
 #   remote_user: centos
 #   roles:
 #     - mysql-install
-#     - mysql-config-cluster
 #     - mysqld-exporter-install
+#     - mysql-config-cluster
 #     - create-wordpress-db
 
 # - name: Install Wordpress
@@ -36,12 +36,15 @@
 #   roles:
 #     - gitlab-runner-install
 
-- name: install monitoring
+- name: Install Node_exporter
+  hosts: all
+  roles: 
+    - node-exporter-install 
+
+- name: Install monitoring
   hosts: monitoring-node
   roles:
-    - mysql-install
-    - node-exporter-install
-    - mysqld-exporter-install
     - prometheus-install
+    - alertmanager-install
+    - grafana-install
 
-    

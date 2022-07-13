@@ -1,12 +1,25 @@
-Host vitalykay-netology-diplom.tk
-  User ubuntu
-  IdentityFile ~/.ssh/id_ed25519
+# Дипломная работа по курсу "DevOps-инженер"
 
-Host 51.250.69.94
-  User ubuntu
-  IdentityFile ~/.ssh/id_ed25519
+Выполнил: Кайдалов Виталий Сергеевич
+E-mail: vitalykay@gmail.com
 
-Host 192.168.200.*
-  User centos
-  ProxyJump vitalykay-netology-diplom.tk
-  IdentityFile ~/.ssh/id_ed25519
+## Этапы Выполнения
+
+1. Регистрация доменного имени
+
+На бесплатном сервисе [freenome.com](freenom.com) зарегистрировано доменное имя
+> vitalykay-netology-diplom.tk
+
+Добавлены А-записи, указывающие на зарезервированный в Yandex.Cloud статический публичный адрес
+> * www.vitalykay-netology-diplom.tk
+> * gitlab.vitalykay-netology-diplom.tk
+> * grafana.vitalykay-netology-diplom.tk
+> * prometheus.vitalykay-netology-diplom.tk
+> * alertmahager.vitalykay-netology-diplom.tk
+
+![dns](images/dns_management.png)
+
+2. Подготовка инфраструктуры
+
+Для выполнения задания использовался облачный сервис Yandex.Cloud.
+Подготовка инфраструктуры осуществлялась с помощью *Terraform*

@@ -1,0 +1,16 @@
+global:
+route:
+  group_by: ['alertname']
+  group_wait: 30s
+  group_interval: 10m
+  repeat_interval: 60m
+  receiver: 'email'
+receivers:
+- name: 'email'
+  email_configs:
+  - to: '{{ receiver_email }}'
+    from: '{{ sender_email }}'
+    smarthost: '{{ smtp_host }}'
+    auth_username: '{{ email_user_name }}'
+    auth_identity: '{{ email_user_name }}'
+    auth_password: '{{ email_password }}'

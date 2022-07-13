@@ -42,3 +42,12 @@ scrape_configs:
       - targets: ['{{ hostvars['mysql-slave'].ansible_host }}:9104']
         labels:
           alias: mysqld-slave
+rule_files:
+  - "rules.yml"
+
+alerting:
+  alertmanagers:
+  - scheme: http
+    static_configs:
+    - targets:
+      - 'localhost:9093'
