@@ -1,6 +1,6 @@
 resource "yandex_compute_instance" "monitoring-node" {
   name                      = "monitoring-node"
-  zone                      = "ru-central1-a"
+  zone                      = "ru-central1-b"
   hostname                  = "monitoring-node"
   allow_stopping_for_update = true
 

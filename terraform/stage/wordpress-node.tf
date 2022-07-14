@@ -1,6 +1,6 @@
 resource "yandex_compute_instance" "wordpress-node" {
   name                      = "wordpress-node"
-  zone                      = "ru-central1-a"
+  zone                      = "ru-central1-b"
   hostname                  = "wordpress-node"
   allow_stopping_for_update = true
 

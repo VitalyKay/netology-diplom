@@ -10,7 +10,7 @@ resource "yandex_vpc_subnet" "public-subnet" {
 
 resource "yandex_vpc_subnet" "private-subnet" {
   name           = "private-subnet"
-  zone           = "ru-central1-a"
+  zone           = "ru-central1-b"
   network_id     = "${yandex_vpc_network.default.id}"
   v4_cidr_blocks = ["192.168.200.0/24"]
   route_table_id = "${yandex_vpc_route_table.private-nat.id}"

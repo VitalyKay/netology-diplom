@@ -1,6 +1,6 @@
 resource "yandex_compute_instance" "mysql-master-node" {
   name                      = "mysql-master-node"
-  zone                      = "ru-central1-a"
+  zone                      = "ru-central1-b"
   hostname                  = "mysql-master-node"
   allow_stopping_for_update = true
 
@@ -29,7 +29,7 @@ resource "yandex_compute_instance" "mysql-master-node" {
 
 resource "yandex_compute_instance" "mysql-slave-node" {
   name                      = "mysql-slave-node"
-  zone                      = "ru-central1-a"
+  zone                      = "ru-central1-b"
   hostname                  = "mysql-slave-node"
   allow_stopping_for_update = true
 

@@ -1,6 +1,6 @@
 resource "yandex_compute_instance" "gitlab-server-node" {
   name                      = "gitlab-server-node"
-  zone                      = "ru-central1-a"
+  zone                      = "ru-central1-b"
   hostname                  = "gitlab-server-node"
   allow_stopping_for_update = true
 
@@ -29,7 +29,7 @@ resource "yandex_compute_instance" "gitlab-server-node" {
 
 resource "yandex_compute_instance" "gitlab-runner-node" {
   name                      = "gitlab-runner-node"
-  zone                      = "ru-central1-a"
+  zone                      = "ru-central1-b"
   hostname                  = "gitlab-runner-node"
   allow_stopping_for_update = true
 
