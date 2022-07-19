@@ -11,18 +11,18 @@
   remote_user: centos
   roles:
     - mysql-install
-#    - mysqld-exporter-install
+    - mysqld-exporter-install
     - mysql-config-cluster
     - create-wordpress-db
 
-- name: Install Wordpress
-  hosts: wordpress-node
-  remote_user: centos
-  roles:
-    - nginx
-    - php-install
-    - wordpress
-    - nginx-wordpress-config
+# - name: Install Wordpress
+#   hosts: wordpress-node
+#   remote_user: centos
+#   roles:
+#     - nginx
+#     - php-install
+#     - wordpress
+#     - nginx-wordpress-config
 
 # - name: Install Gitlab server
 #   hosts: gitlab-server
@@ -36,15 +36,15 @@
 #   roles:
 #     - gitlab-runner-install
 
-# - name: Install Node_exporter
-#   hosts: all
-#   roles: 
-#     - node-exporter-install 
+- name: Install Node_exporter
+  hosts: all
+  roles: 
+    - node-exporter-install 
 
-# - name: Install monitoring
-#   hosts: monitoring-node
-#   roles:
-#     - prometheus-install
-#     - alertmanager-install
-#     - grafana-install
+- name: Install monitoring
+  hosts: monitoring-node
+  roles:
+    - prometheus-install
+    - alertmanager-install
+    - grafana-install
 

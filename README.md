@@ -68,7 +68,7 @@ terraform init -backend-config="access_key=<your access key>" -backend-config="s
 
 ![nets](images/nets.png)
 
-Так же *terraform* создает файл ansible/inventory/inventory.yml сос списком хостов и настройками SSH подключения для Ansible, после чего запускает плейбук с этим инвентори.
+Так же *terraform* создает файл ansible/inventory/inventory.yml со списком хостов и настройками SSH подключения для Ansible, после чего запускает плейбук с этим инвентори.
 
 6. Применение изменений
 Выполнение команд *terraform apply* и *terraform destroy* фиксируется в файле состояния в s3-backend
@@ -134,4 +134,18 @@ terraform init -backend-config="access_key=<your access key>" -backend-config="s
 * [node-exporter-install](ansible/roles/node-exporter-install/README.md) - роль для установки и запуска сервиса node_exporter
 * [mysqld-exporter-install](ansible/roles/mysqld-exporter-install/README.md) - роль для установки сервиса mysqld_exporter на серверах MySQL с созданием пользователя с минимально необходимыми правами.
 * [prometheus-install](ansible/roles/prometheus-install/README.md) - роль для установки и настройки Prometheus. Роль создает файл настройки для prometheus c jobs, получающими метрики со всех node_exporter и mysqld_exporter на основе инвентори, добавляет подключение и правила алертов для Alertmanager.
-* []
+* [alertmanager-install](ansible/roles/alertmanager-install/README.md) - роль для установки и настройки Alertmanager. Alertmanager настраивается на отправку алертов по электронной почте. Переменные:
+  + receiver_email - адрес электронной почты получателя алертов
+  + sender_email - адрес электронной почты отправителя алертов
+  + smtp_host - адрес почтового сервера SMTP
+  + email_user_name - имя пользователя для авторизации на SMTP сервере
+  + email_password - пароль для авторизации на SMTP сервере
+* [grafana-install](ansible/roles/grafana-install/README.md) - роль для установки Gragana, настройки подключения к источнику данных Prometheus и установки начального дашборда для отображения основной информации о нодах.
+
+![prom-targets](images/prom-targets.png)
+
+![prom-alertrules](images/prom-alertrules.png)
+
+![alertmanager](images/alertmanager.png)
+
+![grafana](images/grafana.png)
