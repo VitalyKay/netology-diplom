@@ -8,9 +8,76 @@
   ansible.builtin.yum:
     name: gitlab-ce
   environment:
-    EXTERNAL_URL: "http://{{ gitlab_domain }}"
+    EXTERNAL_URL: "https://{{ gitlab_domain }}"
     GITLAB_ROOT_PASSWORD: "{{ gitlab_root_password }}"
+- name: Copy gitlab configuration template
+  become: yes
+  ansible.builtin.template:
+    src: templates/gitlab.rb.j2
+    dest: /etc/gitlab/gitlab.rb
+    owner: "root"
+    group: "root"
+    mode: 0644
+- name: Gitlab reconfigure
+  become: yes
+  ansible.builtin.shell: gitlab-ctl reconfigure 
+
 - name: Extract Runner Registration Token directly from Gitlab Rails console
   become: true
   ansible.builtin.shell: 'gitlab-rails runner -e production "puts Gitlab::CurrentSettings.current_application_settings.runners_registration_token"'
   register: gitlab_runner_registration_token_result
+
+# !!!Эти таски закомментированы, тк работают через раз, создание группы просто хронически пятисотит    
+# - name: create gitlab user
+#   community.general.gitlab_user:
+#     api_url: "https://{{ gitlab_domain }}/"
+#     validate_certs: no
+#     api_username: "root"
+#     api_password: "{{ gitlab_root_password }}"
+#     username: "{{ gitlab_user_name }}"
+#     name: "{{ gitlab_user_name }}"
+#     password: "{{ gitlab_user_pass }}"
+#     email: "{{ gitlab_user_email }}"
+#     sshkey_file: "{{ lookup('ansible.builtin.file', 'files/id_ed25519.pub') }}"
+#     sshkey_name: "{{ gitlab_user_name }}"
+#     access_level: developer
+#     confirm: no
+#     state: present
+#   delegate_to: localhost
+
+# - name: create gitlab group
+#   community.general.gitlab_group:
+#     api_url: "https://{{ gitlab_domain }}/"
+#     validate_certs: no
+#     api_username: "root"
+#     api_password: "{{ gitlab_root_password }}"
+#     name: "{{ gitlab_group_name }}"
+#     path: "{{ gitlab_group_name }}"
+#     #project_creation_level: developer
+#     state: present
+#   delegate_to: localhost
+
+# - name: Create GitLab Project in group
+#   community.general.gitlab_project:
+#     api_url: "https://{{ gitlab_domain }}/"
+#     validate_certs: no
+#     api_username: "root"
+#     api_password: "{{ gitlab_root_password }}"
+#     name: "{{ gitlab_project_name }}"
+#     merge_method: rebase_merge
+#     import_url: "{{ import_repo_url }}"
+#     initialize_with_readme: no
+#     state: present
+#   delegate_to: localhost  
+
+# - name: Add a user to a GitLab Project
+#   community.general.gitlab_project_members:
+#     api_url: "https://{{ gitlab_domain }}/"
+#     api_username: "root"
+#     api_password: "{{ gitlab_root_password }}"
+#     validate_certs: no
+#     project: "{{ gitlab_project_name }}"
+#     gitlab_user: "{{ gitlab_user_name }}"
+#     access_level: developer
+#     state: present
+#   delegate_to: localhost

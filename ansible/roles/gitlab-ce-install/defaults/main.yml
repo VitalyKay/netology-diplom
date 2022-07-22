@@ -2,3 +2,9 @@
 # defaults file for gitlab-ce-install
 gitlab_domain: "gitlab.vitalykay-netology-diplom.tk"
 gitlab_root_password: "Pa$$w0rd"
+#gitlab_user_name: "testuser"
+#gitlab_user_pass: "Pa$$w0rd"
+#gitlab_user_email: "vitalykay@gmail.com"
+#gitlab_group_name: "testproj"
+#gitlab_project_name: "beonepage"
+#import_repo_url: "https://github.com/.git"

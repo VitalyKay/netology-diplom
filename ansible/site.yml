@@ -15,26 +15,26 @@
     - mysql-config-cluster
     - create-wordpress-db
 
-# - name: Install Wordpress
-#   hosts: wordpress-node
-#   remote_user: centos
-#   roles:
-#     - nginx
-#     - php-install
-#     - wordpress
-#     - nginx-wordpress-config
+- name: Install Wordpress
+  hosts: wordpress-node
+  remote_user: centos
+  roles:
+    - nginx
+    - php-install
+    - wordpress
+    - nginx-wordpress-config
 
-# - name: Install Gitlab server
-#   hosts: gitlab-server
-#   remote_user: centos
-#   roles:
-#     - gitlab-ce-install
+- name: Install Gitlab server
+  hosts: gitlab-server
+  remote_user: centos
+  roles:
+    - gitlab-ce-install
 
-# - name: Install Gitlab runner
-#   hosts: gitlab-runner
-#   remote_user: centos
-#   roles:
-#     - gitlab-runner-install
+- name: Install Gitlab runner
+  hosts: gitlab-runner
+  remote_user: centos
+  roles:
+    - gitlab-runner-install
 
 - name: Install Node_exporter
   hosts: all

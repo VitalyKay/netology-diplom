@@ -29,10 +29,52 @@
     state: directory
     recurse: yes
     owner: "{{ nginx_user }}"
+    mode: 0755
 - name: Configure Wordpress
   become: yes
   ansible.builtin.template:
     src: templates/wp-config.php.j2
     dest: "/var/www/html/{{ wordpress_domain }}/wp-config.php"
     mode: 0666
+
+- name: 
+  become: yes
+  ansible.builtin.user:
+    name: "gitlab-runner"
+    group: "root"
+    create_home: yes 
+
+- name: create .ssh dir
+  become: yes
+  ansible.builtin.file:
+    path: "/home/gitlab-runner/.ssh"
+    state: directory
+    owner: "gitlab-runner"
+    group: "root"
+    mode: "0700"
+    recurse: yes
+
+- name: add deploy public key
+  become: yes
+  ansible.builtin.copy: 
+    src: "files/id_ed25519.pub"
+    dest: "/home/gitlab-runner/.ssh/authorized_keys"
+    owner: "gitlab-runner"
+    group: "root"
+    mode: "0600"
     
+- name: create sudoers file
+  become: yes
+  ansible.builtin.copy:
+    src: "files/gitlab-runner"
+    dest: "/etc/sudoers.d/gitlab-runner" 
+    owner: "root"
+    group: "root"
+    mode: "0440"
+
+- name: Install wp-cli
+  become: yes
+  ansible.builtin.yum:
+    name:
+      - wp-cli
+    state: present

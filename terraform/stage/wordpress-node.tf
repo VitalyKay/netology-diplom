@@ -26,3 +26,8 @@ resource "yandex_compute_instance" "wordpress-node" {
     serial-port-enable = 1
   }
 }
+
+resource "local_file" "deploy_key_public_wp" {
+  content = "${ tls_private_key.deploy_key.public_key_openssh }"
+  filename = "../../ansible/roles/wordpress/files/id_ed25519.pub"
+}

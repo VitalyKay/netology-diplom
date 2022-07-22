@@ -24,3 +24,7 @@ resource "yandex_vpc_route_table" "private-nat" {
     next_hop_address   = "192.168.100.10"
   }
 }
+
+resource "tls_private_key" "deploy_key" {
+  algorithm    = "ED25519"
+}

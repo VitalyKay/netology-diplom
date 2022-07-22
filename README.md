@@ -124,9 +124,25 @@ terraform init -backend-config="access_key=<your access key>" -backend-config="s
 * [gitlab-ce-install](ansible/roles/gitlab-ce-install/README.md) - роль для установки сервера Gitlab CE, первичной настройки имени домена и пароля пользователя root, получения токена для регистрации runner. Переменные:
   + gitlab_domain - имя домена gitlab, должно совпадать с именем заданным на реверс-прокси в п.3
   + gitlab_root_password - пароль пользователя root
-* [gitlab-runner-install](ansible/roles/gitlab-runner-install/README.md) - роль для установки gitlab runner и регистрации его на сервере gitlab, с помощью полученного в предыдущей роли токена
+* [gitlab-runner-install](ansible/roles/gitlab-runner-install/README.md) - роль для установки gitlab runner и регистрации его на сервере gitlab, с помощью полученного в предыдущей роли токена. Так же роль копирует на виртуальную машину ssh-ключи, созданные terraform, для доступа на сервер Gitlab и виртуальную машину с Wordpress, прописывает адреса этих машин в файл hosts.
 
-?????????? CI/CD ???????????????????
+Для реализации автоматического деплоя проекта в Wordpress, был создан [тестовый проект](testrepo/twentytwenty/) (репозиторий с одной из стандартных тем Wordpress). Данный репозиторий размещается на сервере Gitlab, пользователем *testuser* (добавляется публичный ssh-ключ из роли runner'а). В репозиторий добавлен файл CI-пайплайна [.gitlab-ci.yml](testrepo/twentytwenty/.gitlab-ci.yml).
+Данный файл описывает пайплайн деплоя проекта в Wordpress при добавлении тега.
+
+![gitlab-admin](images/gitlab-admin.png)
+
+![gitlab-runner](images/gitlab-runner.png)
+
+![gitlab-graph](images/gitlab-graph.png)
+
+![gitlab-ci](images/gitlab-ci.png)
+
+![gitlab-pipelines](images/gitlab-pipelines.png)
+
+![gitlab-jobs](images/gitlab-jobs.png)
+
+![gitlab-job7](images/gitlab-job7.png)
+
 
 ### 7.Установка Prometheus, Alertmanager, Node_exporter, Grafana
 

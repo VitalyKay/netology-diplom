@@ -7,6 +7,51 @@
   become: yes
   ansible.builtin.yum:
     name: gitlab-runner
+
+- name: create .ssh dir
+  become: yes
+  ansible.builtin.file:
+    path: "/home/gitlab-runner/.ssh"
+    state: directory
+    owner: "gitlab-runner"
+    group: "gitlab-runner"
+    mode: "0700"
+    recurse: yes
+- name: copy deploy private key
+  become: yes
+  ansible.builtin.copy:
+    src: "files/id_ed25519"
+    dest: "/home/gitlab-runner/.ssh/id_ed25519"
+    owner: "gitlab-runner"
+    group: "gitlab-runner"
+    mode: "0600"
+- name: copy deploy public key
+  become: yes
+  ansible.builtin.copy:
+    src: "files/id_ed25519.pub"
+    dest: "/home/gitlab-runner/.ssh/id_ed25519.pub"
+    owner: "gitlab-runner"
+    group: "gitlab-runner"
+    mode: "0644"
+- name: create config file
+  become: yes
+  ansible.builtin.copy:
+    src: "files/config"
+    dest: "/home/gitlab-runner/.ssh/config" 
+    owner: "gitlab-runner"
+    group: "gitlab-runner"
+    mode: "0644"
+- name: add gitlab and wordpress to hosts
+  become: yes
+  ansible.builtin.template:
+    src: "templates/hosts.j2"
+    dest: "/etc/hosts"
+    owner: "root"
+    group: "root"
+    mode: "0644"
+
 - name: Register Gitlab runner
   become: yes
-  ansible.builtin.shell: gitlab-runner register --non-interactive --url "http://{{ hostvars['gitlab-server'].ansible_host }}/" --registration-token "{{ hostvars['gitlab-server'].gitlab_runner_registration_token_result.stdout }}" --executor "shell" --description "shell-runner" --tag-list "centos" --run-untagged="true" --locked="false" --access-level="not_protected"    
+  ansible.builtin.shell: gitlab-runner register --non-interactive --url "http://gitlab/" --registration-token "{{ hostvars['gitlab-server'].gitlab_runner_registration_token_result.stdout }}" --executor "shell" --description "shell-runner" --tag-list "centos" --run-untagged="true" --locked="false" --access-level="not_protected"    
+
+    

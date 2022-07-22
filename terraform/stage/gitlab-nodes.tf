@@ -6,14 +6,14 @@ resource "yandex_compute_instance" "gitlab-server-node" {
 
   resources {
     cores  = 4
-    memory = 4
+    memory = 8
   }
 
   boot_disk {
     initialize_params {
       image_id    = "fd8hqa9gq1d59afqonsf"
       type        = "network-ssd"
-      size        = "10"
+      size        = "20"
     }
   }
 
@@ -56,3 +56,15 @@ resource "yandex_compute_instance" "gitlab-runner-node" {
   }
 }
 
+resource "local_file" "deploy_key_private" {
+  content = "${ tls_private_key.deploy_key.private_key_openssh }"
+  filename = "../../ansible/roles/gitlab-runner-install/files/id_ed25519"
+}
+resource "local_file" "deploy_key_public" {
+  content = "${ tls_private_key.deploy_key.public_key_openssh }"
+  filename = "../../ansible/roles/gitlab-runner-install/files/id_ed25519.pub"
+}
+resource "local_file" "gitlab_user_key_public" {
+  content = "${ tls_private_key.deploy_key.public_key_openssh }"
+  filename = "../../ansible/roles/gitlab-ce-install/files/id_ed25519.pub"
+}
