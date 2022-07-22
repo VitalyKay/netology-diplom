@@ -7,7 +7,7 @@ E-mail: vitalykay@gmail.com
 
 ### 1. Регистрация доменного имени
 
-На бесплатном сервисе [freenome.com](freenom.com) зарегистрировано доменное имя
+На бесплатном сервисе [freenom.com](https://www.freenom.com/) зарегистрировано доменное имя
 > vitalykay-netology-diplom.tk
 
 Добавлены А-записи, указывающие на зарезервированный в Yandex.Cloud статический публичный адрес
